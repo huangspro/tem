@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>活动预览</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
+    color: white;
+    overflow-x: hidden;
+}
+
+/* 顶部日期栏 */
+.date-bar {
+    display: flex;
+    overflow-x: auto;
+    padding: 15px;
+    gap: 10px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    position: sticky;
+    top: 0;
+}
+
+.date-item {
+    flex: 0 0 auto;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    background: rgba(255,255,255,0.08);
+    transition: 0.3s;
+}
+
+.date-item:hover {
+    transform: scale(1.05);
+}
+
+.date-item.active {
+    background: linear-gradient(45deg,#ff4d4d,#6a5acd);
+}
+
+/* 活动列表 */
+.container {
+    padding: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.12);
+}
+
+.title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.time {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.tag {
+    display: inline-block;
+    padding: 3px 8px;
+    margin-top: 8px;
+    border-radius: 8px;
+    font-size: 12px;
+    background: #6a5acd;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 顶部日期 -->
+<div class="date-bar" id="dateBar"></div>
+
+<!-- 活动列表 -->
+<div class="container" id="list"></div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<script>
+
+function loadActivities(){
+
+    $.post("/get", { date: current }, function(res) {
+
+        list.innerHTML = "";
+
+        const activities = res.split("###"); // 如果后端没分隔符，这里需要改
+
+        activities.forEach(block => {
+            if (!block.trim()) return;
+
+            const get = (key) => {
+                const m = block.match(new RegExp(key + ":\\s*(.*)"));
+                return m ? m[1] : "";
+            };
+
+            const card = document.createElement("div");
+            card.className = "card";
+
+            card.innerHTML = `
+                <div class="title">${get("Title")}</div>
+                <div class="time">${get("Start Time")} - ${get("End Time")}</div>
+                <div class="tag">${get("Position")}</div>
+                <div style="margin-top:8px; font-size:12px; opacity:0.8">
+                    ${get("Introduction")}
+                </div>
+            `;
+
+            list.appendChild(card);
+        });
+
+    });
+
+}
+
+</body>
+</html>
