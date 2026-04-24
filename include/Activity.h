@@ -48,28 +48,12 @@ public:
       checkout_url(checkout_url),
       id(id)
     {}
-
-    // 转字符串
-    std::string toString() {
-        return "Activity{id=" + std::to_string(id) +
-               ", title=" + title +
-               ", intro=" + introduction +
-               ", detail=" + detail + "}";
-    }
-
-    // 保存到 txt 文件
-    bool save(const std::string& filename) {
-        std::ofstream out(filename);
-        if (!out.is_open()) return false;
-
-        out << toString();
-        out.close();
-        return true;
-    }
-
-    int getId() const {
-        return id;
-    }
+    
+    Activity(const nlohmann::json& j);  // initialize from json string
+    std::string toString();
+    bool save();
+    bool read(int ID);
+    int getId();
 };
 
 #endif
