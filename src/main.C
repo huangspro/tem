@@ -11,6 +11,8 @@ int port;
 ActivityList All; // initialize the list from files
 int main()
 { 
+std::cout<<All.toString()<<std::endl;
+/*
     std::cout<<"port: "<<std::endl;
     std::cin>>port;
     
@@ -65,6 +67,7 @@ int main()
     });
 
     app.port(18080).multithreaded().run();
+*/
 }
 
 
