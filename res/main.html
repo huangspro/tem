@@ -116,9 +116,7 @@ $(function () {
             method: "POST",
             success: function (res) {
                 allActivities = res || [];
-                console.log(res);
                 let today = formatDate(new Date());
-                console.log(today);
                 renderByDate(today);
             },
             error: function () {
@@ -246,7 +244,6 @@ $(function () {
     }
 
     loadAllActivities();
-    console.log(1);
 });
 </script>
 

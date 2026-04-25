@@ -2,7 +2,7 @@
 #include <fstream>
 #include <sstream>
 #include <nlohmann/json.hpp>
-
+#include<iostream>
 #include "../include/Activity.h"
 
 std::string Activity::toString()
@@ -56,7 +56,7 @@ Activity::Activity(const nlohmann::json& j) {
 // Save activity data to text file
 bool Activity::save()
 {
-    std::string filename = "1.act";
+    std::string filename = "../activities/" + std::to_string(id) + ".act";
     std::ofstream file(filename);
     if (!file.is_open())
     {

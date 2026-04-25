@@ -8,11 +8,9 @@
 #include "../include/ActivityList.h"
 
 int port;
-ActivityList All; // initialize the list from files
+ActivityList All;
 int main()
 { 
-std::cout<<All.toString()<<std::endl;
-/*
     std::cout<<"port: "<<std::endl;
     std::cin>>port;
     
@@ -67,7 +65,6 @@ std::cout<<All.toString()<<std::endl;
     });
 
     app.port(18080).multithreaded().run();
-*/
 }
 
 

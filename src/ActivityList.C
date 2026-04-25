@@ -1,6 +1,7 @@
 #include <nlohmann/json.hpp>
 #include "../include/ActivityList.h"
 #include <filesystem>
+#include<iostream>
 #include <string>
 
 namespace fs = std::filesystem;
@@ -9,7 +10,6 @@ namespace fs = std::filesystem;
 ActivityList::ActivityList()
 {
     std::string dir = "../activities/";
-
     if (!fs::exists(dir) || !fs::is_directory(dir))
     {
         return;
