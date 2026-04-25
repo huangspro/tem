@@ -16,20 +16,31 @@ int main()
     
     crow::SimpleApp app;
 
-    CROW_ROUTE(app, "/")([]() {
-        crow::response res;
-        res.set_static_file_info("../res/stumain.html");
-        return res;
+    // main page
+    CROW_ROUTE(app, "/main")([]() {
+        std::ifstream file("../res/main.html");
+
+        if (!file.is_open()) {
+            return crow::response(404, "File not found");
+        }
+
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+
+        return crow::response(buffer.str());
     });
     
+    // api to get all the activities
     CROW_ROUTE(app, "/get").methods("POST"_method)([](const crow::request& req) {
         crow::response res;
+        std::cout<<All.toString()<<std::endl;
         res.code = 200;
         res.set_header("Content-Type", "application/text");
         res.body = R"({'status':'success', 'content':'" + All.toString() + "'})";
         return res;
     });
     
+    // api to create an activity and save one the server
     CROW_ROUTE(app, "/new").methods("POST"_method)([](const crow::request& req) {
         crow::response res;
 

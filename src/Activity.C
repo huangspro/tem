@@ -56,7 +56,7 @@ Activity::Activity(const nlohmann::json& j) {
 // Save activity data to text file
 bool Activity::save()
 {
-    std::string filename = "activities/" + id.toString() + ".act";
+    std::string filename = "1.act";
     std::ofstream file(filename);
     if (!file.is_open())
     {
@@ -69,11 +69,11 @@ bool Activity::save()
 
 bool Activity::read(int ID)
 {
-    std::string filename = "activities/" + ID.toString() + ".act";
+    std::string filename = "../activities/" + std::to_string(ID) + ".act";
     std::ifstream file(filename);
     if (!file.is_open())return false;
 
-    json j;
+    nlohmann::json j;
     try
     {
         file >> j;

@@ -1,64 +1,105 @@
+#include <nlohmann/json.hpp>
 #include "../include/ActivityList.h"
+#include <filesystem>
+#include <string>
 
+namespace fs = std::filesystem;
+
+// Constructor: loads all .act files from the activities directory and initializes the activity list
 ActivityList::ActivityList()
 {
     std::string dir = "../activities/";
+
     if (!fs::exists(dir) || !fs::is_directory(dir))
     {
-        return; 
+        return;
     }
 
     for (const auto& entry : fs::directory_iterator(dir))
     {
-        if (!entry.is_regular_file()) continue；
+        if (!entry.is_regular_file()) continue;
+
         fs::path path = entry.path();
         if (path.extension() != ".act") continue;
-        
+
         std::string name = path.stem().string();
         int id = std::stoi(name);
+
         Activity* newone = new Activity();
-        if (newone->read(id))activitylist.add(&activity);
+
+        if (newone->read(id))
+        {
+            add(newone);
+        }
+        else
+        {
+            delete newone;
+        }
     }
 }
 
-bool ActivityList::add(Activity* act){
-  for(int i=0;i<list.size();i++){
-    if(i==act)return false;
-  }
-  list.push_back(act);
-  return true;
-}
+// Adds an Activity pointer to the internal list if it is not already present
+bool ActivityList::add(Activity* act)
+{
+    for (int i = 0; i < list.size(); i++)
+    {
+        if (list[i] == act)
+            return false;
+    }
 
-bool del(int id){
-  for(int i=0;i<list.size();i++){
-    if(i->getId() == id)list.erase(list.begin() + i);
+    list.push_back(act);
     return true;
-  }
-  return false;
 }
 
-//return a string containing the json string
-std::string ActivityList::toString(){
-  std::string result = "[";
-  for(int i=0;i<list.size();i++){
-    result += i->toString();
-    if(i!=list.size()-1)result += ",";
-  }
-  result += "]"
-  return result;
+// Deletes an Activity from the list by its ID and frees its memory
+bool ActivityList::del(int id)
+{
+    for (int i = 0; i < list.size(); i++)
+    {
+        if (list[i]->getId() == id)
+        {
+            delete list[i];
+            list.erase(list.begin() + i);
+            return true;
+        }
+    }
+    return false;
 }
 
-bool save(){
-  for(int i=0;i<list.size();i++){
-    if(!list[i]->save())return false;
-  }
-  return true;
+// Serializes all activities in the list into a JSON-like string
+std::string ActivityList::toString()
+{
+    std::string result = "[";
+
+    for (int i = 0; i < list.size(); i++)
+    {
+        result += list[i]->toString();
+        if (i != list.size() - 1)
+            result += ",";
+    }
+
+    result += "]";
+    return result;
 }
 
-// read data from files to update the list
-bool read(){
-  for(int i=0;i<list.size();i++){
-    if(!list[i]->read(list[i]->getId()))return false;
-  }
-  return true;
+// Saves all activities in the list to their respective storage files
+bool ActivityList::save()
+{
+    for (int i = 0; i < list.size(); i++)
+    {
+        if (!list[i]->save())
+            return false;
+    }
+    return true;
+}
+
+// Reloads all activities from persistent storage using their IDs
+bool ActivityList::read()
+{
+    for (int i = 0; i < list.size(); i++)
+    {
+        if (!list[i]->read(list[i]->getId()))
+            return false;
+    }
+    return true;
 }

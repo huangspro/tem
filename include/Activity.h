@@ -11,7 +11,7 @@ private:
     std::string title, introduction, detail;
     std::string participant_number, participant_condition, reward;
     std::string signup_url, checkin_url, checkout_url;
-
+    
     int id;
 
 public:
