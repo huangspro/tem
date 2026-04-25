@@ -25,7 +25,7 @@ ActivityList::ActivityList()
         std::string name = path.stem().string();
         int id = std::stoi(name);
 
-        Activity* newone = new Activity();
+        Activity* newone = new Activity("","","","","","","","","","","","","","","","");
 
         if (newone->read(id))
         {

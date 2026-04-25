@@ -190,10 +190,25 @@ $(function () {
                     <p><b>Conditions:</b> ${item.participant_condition || "None"}</p>
                     <p><b>Reward:</b> ${item.reward || "None"}</p>
                     <hr style="border:0;border-top:1px solid #333;margin:10px 0;">
-                    <p><b>Check-in location:</b> ${item.checkin_position || "Not set"}</p>
-                    <p><b>Check-in time:</b> ${item.checkin_time || "Not set"}</p>
-                    <p><b>Check-out location:</b> ${item.checkout_position || "Not set"}</p>
-                    <p><b>Check-out time:</b> ${item.checkout_time || "Not set"}</p>
+                    <p><b>Check-in</b></p>
+                    <p>Location: ${item.checkin_position || "Not set"}</p>
+                    <p>Time: ${item.checkin_time || "Not set"}</p>
+                    <p><b>Check-out</b></p>
+                    <p>Location: ${item.checkout_position || "Not set"}</p>
+                    <p>Time: ${item.checkout_time || "Not set"}</p>
+                    <hr style="border:0;border-top:1px solid #333;margin:10px 0;">
+                    <p><b>Links</b></p>
+                    <p>Signup: ${item.signup_url? `<a href="${item.signup_url}" target="_blank" style="color:#6a5acd;">Open</a>`: "N/A"}</p>
+                    <p>Check-in: ${
+                        item.checkin_url
+                            ? `<a href="${item.checkin_url}" target="_blank" style="color:#6a5acd;">Open</a>`
+                            : "N/A"
+                    }</p>
+                    <p>Check-out: ${
+                        item.checkout_url
+                            ? `<a href="${item.checkout_url}" target="_blank" style="color:#6a5acd;">Open</a>`
+                            : "N/A"
+                    }</p>
                     <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;">
                         <button id="signupBtn" style="
                             padding:10px;
@@ -217,7 +232,9 @@ $(function () {
                 </div>
             </div>
         `;
+
         $("body").append(html);
+
         $("#signupBtn").on("click", function () {
             if (item.signup_url) {
                 window.open(item.signup_url, "_blank");
@@ -225,6 +242,7 @@ $(function () {
                 alert("No signup link available");
             }
         });
+
         $("#closeModal").on("click", function () {
             $("#modalMask").remove();
         });

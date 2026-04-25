@@ -19,14 +19,18 @@ int main()
     // main page
     CROW_ROUTE(app, "/main")([]() {
         std::ifstream file("../res/main.html");
-
-        if (!file.is_open()) {
-            return crow::response(404, "File not found");
-        }
-
+        if (!file.is_open())return crow::response(404, "File not found");
         std::stringstream buffer;
         buffer << file.rdbuf();
-
+        return crow::response(buffer.str());
+    });
+    
+    // main page
+    CROW_ROUTE(app, "/create")([]() {
+        std::ifstream file("../res/new.html");
+        if (!file.is_open())return crow::response(404, "File not found");
+        std::stringstream buffer;
+        buffer << file.rdbuf();
         return crow::response(buffer.str());
     });
     
@@ -43,7 +47,6 @@ int main()
     // api to create an activity and save one the server
     CROW_ROUTE(app, "/new").methods("POST"_method)([](const crow::request& req) {
         crow::response res;
-
         try {
             auto body = nlohmann::json::parse(req.body);
             Activity* newone = new Activity(body);
