@@ -1,3 +1,6 @@
+
+
+std::string createPage = R"jijijiji( 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -197,3 +200,4 @@ $(function () {
 
 </body>
 </html>
+ )jijijiji";

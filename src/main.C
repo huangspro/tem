@@ -30,13 +30,16 @@ int main()
     
     // api to get all the activities
     CROW_ROUTE(app, "/get").methods("POST"_method)([](const crow::request& req) {
-        crow::response res;
-        std::cout<<All.toString()<<std::endl;
-        res.code = 200;
-        res.set_header("Content-Type", "application/text");
-        res.body = R"({'status':'success', 'content':'" + All.toString() + "'})";
-        return res;
-    });
+      std::cout << All.toString() << std::endl;
+      crow::json::wvalue res;
+      res["status"] = "success";
+      res["content"] = crow::json::load(All.toString());
+      crow::response response;
+      response.code = 200;
+      response.set_header("Content-Type", "application/json");
+      response.body = res.dump();
+      return response;
+});
     
     // api to create an activity and save one the server
     CROW_ROUTE(app, "/new").methods("POST"_method)([](const crow::request& req) {
@@ -44,6 +47,29 @@ int main()
         try {
             auto body = nlohmann::json::parse(req.body);
             Activity* newone = new Activity(body);
+            if (!newone->save()) {
+                res.code = 500;
+                res.body = R"({"status":"error"})";
+                return res;
+            }
+            All.add(newone);    
+            res.code = 200;
+            res.set_header("Content-Type", "application/json");
+            res.body = R"({"status":"success"})";
+            return res;
+        } catch (...) {
+            res.code = 400;
+            res.body = R"({"status":"invalid json"})";
+            return res;
+        }
+    });
+    
+    // api to create an activity and save one the server
+    CROW_ROUTE(app, "/delete").methods("POST"_method)([](const crow::request& req) {
+        crow::response res;
+        try {
+            auto body = nlohmann::json::parse(req.body);
+            int ID = (int)body["id"];
             if (!newone->save()) {
                 res.code = 500;
                 res.body = R"({"status":"error"})";
