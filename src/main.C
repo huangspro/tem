@@ -6,6 +6,8 @@
 #include "crow.h"
 #include "../include/Activity.h"
 #include "../include/ActivityList.h"
+#include "../res/main.h"
+#include "../res/create.h"
 
 int port;
 ActivityList All;
@@ -18,20 +20,12 @@ int main()
 
     // main page
     CROW_ROUTE(app, "/main")([]() {
-        std::ifstream file("../res/main.html");
-        if (!file.is_open())return crow::response(404, "File not found");
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        return crow::response(buffer.str());
+        return mainPage;
     });
     
     // main page
     CROW_ROUTE(app, "/create")([]() {
-        std::ifstream file("../res/new.html");
-        if (!file.is_open())return crow::response(404, "File not found");
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        return crow::response(buffer.str());
+        return createPage;
     });
     
     // api to get all the activities
