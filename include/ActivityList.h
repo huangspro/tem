@@ -18,6 +18,8 @@ public:
   std::string toString();
   bool save();    //save a series of files list from ../activities/
   bool read();   //read files from ../activities/
+  Activity* find(int id);
+  bool remove(int id);
 };
 
 #endif

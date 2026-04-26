@@ -65,23 +65,33 @@ int main()
     });
     
     // api to create an activity and save one the server
-    CROW_ROUTE(app, "/delete").methods("POST"_method)([](const crow::request& req) {
+    CROW_ROUTE(app, "/del").methods("POST"_method)([](const crow::request& req) {
         crow::response res;
         try {
             auto body = nlohmann::json::parse(req.body);
-            int ID = (int)body["id"];
-            if (!newone->save()) {
-                res.code = 500;
-                res.body = R"({"status":"error"})";
+            int ID = body["id"];
+            Activity* target = All.find(ID);
+            if (!All.remove(ID)) {
+                res.code = 404;
+                res.set_header("Content-Type", "application/json");
+                res.body = R"({"status":"error","message":"not found in memory"})";
                 return res;
             }
-            All.add(newone);    
+            if (!target->del()) {
+                res.code = 500;
+                res.set_header("Content-Type", "application/json");
+                res.body = R"({"status":"error","message":"file delete failed"})";
+                return res;
+            }
+
             res.code = 200;
             res.set_header("Content-Type", "application/json");
             res.body = R"({"status":"success"})";
             return res;
+
         } catch (...) {
             res.code = 400;
+            res.set_header("Content-Type", "application/json");
             res.body = R"({"status":"invalid json"})";
             return res;
         }

@@ -103,3 +103,25 @@ bool ActivityList::read()
     }
     return true;
 }
+
+Activity* ActivityList::find(int id)
+{
+    for (auto* a : list) {
+        if (a->getId() == id) {
+            return a;
+        }
+    }
+    return nullptr;
+}
+
+bool ActivityList::remove(int id)
+{
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if ((*it)->getId() == id) {
+            delete *it;          // 如果你 new 过
+            list.erase(it);
+            return true;
+        }
+    }
+    return false;
+}

@@ -1,6 +1,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <cstdio>
 #include <nlohmann/json.hpp>
 #include<iostream>
 #include "../include/Activity.h"
@@ -99,4 +100,14 @@ bool Activity::read(int ID)
 
 int Activity::getId(){
     return id;
+}
+
+
+bool Activity::del()
+{
+    if (id <= 0)return false;
+    std::string filename = "../activities/" + std::to_string(id) + ".act";
+    std::cout<<filename<<std::endl;
+    if (std::remove(filename.c_str()) == 0)return true;
+    else return false;
 }

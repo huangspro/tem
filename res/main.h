@@ -91,7 +91,6 @@ $(function () {
     }
 
     function openDetail(item) {
-
         let html = `
         <div id="modalMask" style="
             position:fixed;top:0;left:0;width:100%;height:100%;
@@ -140,28 +139,16 @@ $(function () {
                     : "N/A"
                 }</p>
 
-                <p>Check-in: ${
-                    item.checkin_url
-                    ? `<a href="${item.checkin_url}" target="_blank" style="color:#6a5acd;">Open</a>`
-                    : "N/A"
-                }</p>
-
-                <p>Check-out: ${
-                    item.checkout_url
-                    ? `<a href="${item.checkout_url}" target="_blank" style="color:#6a5acd;">Open</a>`
-                    : "N/A"
-                }</p>
-
                 <div style="margin-top:20px;display:flex;flex-direction:column;gap:8px;">
 
-                    <button id="signupBtn" style="
+                    <button id="deleteBtn" style="
                         padding:10px;
                         border:none;
                         border-radius:10px;
-                        background:#6a5acd;
+                        background:#c0392b;
                         color:white;
                         cursor:pointer;">
-                        Sign up
+                        Delete
                     </button>
 
                     <button id="closeModal" style="
@@ -181,8 +168,21 @@ $(function () {
 
         $("body").append(html);
 
-        $("#signupBtn").on("click", function () {
-            if (item.signup_url) window.open(item.signup_url, "_blank");
+        $("#deleteBtn").on("click", function () {
+
+            $.ajax({
+                url: "/del",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ id: item.id }),
+                success: function () {
+                    $("#modalMask").remove();
+                    calendar.refetchEvents(); // 刷新日历
+                },
+                error: function () {
+                    alert("Delete failed");
+                }
+            });
         });
 
         $("#closeModal").on("click", function () {
